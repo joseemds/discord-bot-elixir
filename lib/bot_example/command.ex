@@ -6,14 +6,14 @@ defmodule BotExample.Command do
 
   def handle(%{author: %{id: id}}) when is_bot_author?(id), do: :noop
 
-  def handle(msg) do
-    @prefix <> content = msg.content
-
+  def handle(msg = %{content: @prefix <> content}) do
     content
     |> String.trim()
     |> String.split(" ", parts: 3)
     |> execute(msg)
   end
+
+  def handle(_), do: :noop
 
   defp execute(["ping"], msg) do
     Nostrum.Api.create_message(msg.channel_id, "pong")

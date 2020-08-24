@@ -1,19 +1,25 @@
 defmodule BotExample.Command do
-  @prefix "?"
+  @prefix "e"
+  @bot_id 731_905_838_217_822_250
 
-  defp is_actionable?(command), do: String.starts_with?(@prefix, command.content)
+  defguardp is_bot_author?(author_id) when author_id == @bot_id
 
-  def handle(command) do
-    if is_actionable?(command) do
-      command.content
-      |> String.trim()
-      |> String.split(" ", parts: 3)
-      |> Kernel.tl()
-      |> execute(command)
-    end
+  def handle(%{author: %{id: id}}) when is_bot_author?(id), do: :noop
+
+  def handle(msg) do
+    @prefix <> content = msg.content
+
+    content
+    |> String.trim()
+    |> String.split(" ", parts: 3)
+    |> execute(msg)
   end
 
-  defp execute(args, command) do
-    {:ok, args, command}
+  defp execute(["ping"], msg) do
+    Nostrum.Api.create_message(msg.channel_id, "pong")
+  end
+
+  defp execute(_, msg) do
+    Nostrum.Api.create_message(msg.channel_id, "Invalid command repeat it please")
   end
 end

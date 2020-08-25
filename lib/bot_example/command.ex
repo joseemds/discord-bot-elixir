@@ -17,6 +17,13 @@ defmodule BotExample.Command do
     Nostrum.Api.create_message(msg.channel_id, "pong")
   end
 
+  defp execute(["docs", module_name], msg) do
+    {:docs_v1, _, :elixir, _, %{"en" => module_doc}, _, _} =
+      Code.fetch_docs(Module.concat("Elixir", String.capitalize(module_name)))
+
+    Nostrum.Api.create_message(msg.channel_id, module_doc)
+  end
+
   defp execute(_, msg) do
     Nostrum.Api.create_message(msg.channel_id, "This command doesnt exist, sorry")
   end

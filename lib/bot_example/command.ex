@@ -1,7 +1,7 @@
 defmodule BotExample.Command do
   alias BotExample.Command
   @prefix "e"
-  @bot_id 731_905_838_217_822_250
+  @bot_id 747_816_914_826_297_394
 
   def handle(%{author: %{id: @bot_id}}), do: :noop
 
@@ -15,15 +15,19 @@ defmodule BotExample.Command do
   def handle(_), do: :noop
 
   defp execute(["ping"], msg) do
-    Nostrum.Api.create_message(msg.channel_id, "pong")
+    create_message(msg.channel_id, "pong")
   end
 
   defp execute(["docs", module_name], msg) do
     doc = Command.Docs.get_docs(module_name)
-    Nostrum.Api.create_message(msg.channel_id, doc)
+    create_message(msg.channel_id, doc)
   end
 
   defp execute(_, msg) do
-    Nostrum.Api.create_message(msg.channel_id, "This command doesnt exist, sorry")
+    create_message(msg.channel_id, "This command doesnt exist, sorry")
+  end
+
+  defp create_message(channel_id, message) do
+    Nostrum.Api.create_message(channel_id, message)
   end
 end

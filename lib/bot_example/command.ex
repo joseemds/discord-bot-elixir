@@ -1,4 +1,5 @@
 defmodule BotExample.Command do
+  alias BotExample.Command
   @prefix "e"
   @bot_id 731_905_838_217_822_250
 
@@ -18,10 +19,8 @@ defmodule BotExample.Command do
   end
 
   defp execute(["docs", module_name], msg) do
-    {:docs_v1, _, :elixir, _, %{"en" => module_doc}, _, _} =
-      Code.fetch_docs(Module.concat("Elixir", String.capitalize(module_name)))
-
-    Nostrum.Api.create_message(msg.channel_id, module_doc)
+    doc = Command.Docs.get_docs(module_name)
+    Nostrum.Api.create_message(msg.channel_id, doc)
   end
 
   defp execute(_, msg) do

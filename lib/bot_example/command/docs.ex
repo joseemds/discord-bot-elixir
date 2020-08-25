@@ -3,14 +3,14 @@ defmodule BotExample.Command.Docs do
     {:docs_v1, _, :elixir, _, %{"en" => module_doc}, _, _} =
       module_name
       |> String.capitalize()
-      |> modularize()
+      |> modularize
       |> Code.fetch_docs()
 
     module_doc
   end
 
   defp modularize(module_name) do
-    Module.concat(Elixir, module_name)
+    String.to_existing_atom("Elixir." <> module_name)
   end
 end
 
